@@ -1,0 +1,201 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "existe_abonado",
+      "description": "Verifica si un abonado existe por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "direccion_abonado",
+      "description": "Obtiene la dirección de un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "estado_pagos",
+      "description": "Consulta el estado de los pagos de un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "ultimo_pago",
+      "description": "Obtiene el último pago realizado por un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "deuda_total",
+      "description": "Calcula la deuda total de un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "facturas_pendientes",
+      "description": "Lista las facturas pendientes de un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "todas_las_facturas",
+      "description": "Muestra todas las facturas de un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "datos_abonado",
+      "description": "Obtiene los datos completos de un abonado por DNI o póliza.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado (opcional)"},
+          "poliza": {"type": "string", "description": "Número de póliza del abonado (opcional)"}
+        },
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "crear_incidencia",
+      "description": "Crea una nueva incidencia para un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"},
+          "ubicacion": {"type": "string", "description": "Ubicación de la incidencia"},
+          "descripcion": {"type": "string", "description": "Descripción de la incidencia"},
+          "estado": {"type": "string", "description": "Estado de la incidencia (por defecto 'Abierto')"}
+        },
+        "required": ["dni", "ubicacion", "descripcion"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "incidencias_por_dni",
+      "description": "Consulta las incidencias asociadas a un abonado por DNI.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"}
+        },
+        "required": ["dni"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "incidencias_por_nombre",
+      "description": "Consulta las incidencias registradas por nombre de usuario.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "nombre": {"type": "string", "description": "Nombre de usuario"}
+        },
+        "required": ["nombre"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "incidencias_por_ubicacion",
+      "description": "Consulta todas las incidencias registradas en una ubicación específica.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "ubicacion": {"type": "string", "description": "Ubicación a consultar"}
+        },
+        "required": ["ubicacion"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "actualizar_estado_incidencia",
+      "description": "Actualiza el estado de una incidencia por ID.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "incidencia_id": {"type": "integer", "description": "ID de la incidencia"},
+          "nuevo_estado": {"type": "string", "description": "Nuevo estado de la incidencia"}
+        },
+        "required": ["incidencia_id", "nuevo_estado"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "incidencias_pendientes",
+      "description": "Muestra todas las incidencias pendientes.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  }
+]
