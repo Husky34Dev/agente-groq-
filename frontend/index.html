@@ -554,10 +554,89 @@
                     if (typeof response === 'string') {
                         return response;
                     }
-                    // Attempt to stringify any other unexpected but valid JSON response
-                    return '```json\n' + JSON.stringify(response, null, 2) + '\n```';
+                    // If it's an object not covered by specific tools, use generic JSON to Markdown
+                    return jsonToMarkdown(response); // Use the new generic function here
             }
         }
+
+        // === START: NEW GENERIC JSON TO MARKDOWN LOGIC ===
+        // This is the core logic to convert any arbitrary JSON to a readable Markdown format
+        function jsonToMarkdown(json, indent = 0) {
+            let markdown = '';
+            const indentStr = ' '.repeat(indent * 2);
+
+            if (Array.isArray(json)) {
+                // Check if it's an array of uniform objects to convert to a table
+                if (json.length > 0 && json.every(item => typeof item === 'object' && item !== null) && areAllObjectsInArrayUniform(json)) {
+                    markdown += jsonArrayToMarkdownTable(json, indent);
+                } else {
+                    // Otherwise, treat as a list of items
+                    json.forEach(item => {
+                        if (typeof item === 'object' && item !== null) {
+                            markdown += `${indentStr}- ${jsonToMarkdown(item, indent + 1)}\n`;
+                        } else {
+                            markdown += `${indentStr}- ${item}\n`;
+                        }
+                    });
+                }
+            } else if (typeof json === 'object' && json !== null) {
+                // Handle objects: keys as bold text, values recursively
+                for (const key in json) {
+                    if (json.hasOwnProperty(key)) {
+                        const value = json[key];
+                        if (typeof value === 'object' && value !== null && Object.keys(value).length > 0) {
+                            // Nested object or non-empty array
+                            markdown += `${indentStr}**${key}**:\n`;
+                            markdown += jsonToMarkdown(value, indent + 1);
+                        } else if (typeof value === 'object' && value !== null && Object.keys(value).length === 0) {
+                            // Empty object or array
+                            markdown += `${indentStr}**${key}**: (vacío)\n`;
+                        }
+                        else {
+                            // Primitive value
+                            markdown += `${indentStr}**${key}**: ${value}\n`;
+                        }
+                    }
+                }
+            } else {
+                // Primitive value (string, number, boolean)
+                markdown += `${indentStr}${json}\n`;
+            }
+            return markdown;
+        }
+
+        // Helper to check if all objects in an array have the same keys for table conversion
+        function areAllObjectsInArrayUniform(arr) {
+            if (arr.length === 0) return true; // Empty array is 'uniform'
+            if (!arr.every(item => typeof item === 'object' && item !== null)) {
+                return false; // Contains non-object items
+            }
+            const firstKeys = Object.keys(arr[0]).sort().join(',');
+            return arr.every(item => Object.keys(item).sort().join(',') === firstKeys);
+        }
+
+        // Converts an array of uniform objects to a Markdown table
+        function jsonArrayToMarkdownTable(arr, indent = 0) {
+            if (arr.length === 0 || !areAllObjectsInArrayUniform(arr)) {
+                return '';
+            }
+
+            const indentStr = ' '.repeat(indent * 2);
+            const headers = Object.keys(arr[0]);
+            let table = `${indentStr}| ${headers.join(' | ')} |\n`;
+            table += `${indentStr}| ${headers.map(() => '---').join(' | ')} |\n`;
+
+            arr.forEach(obj => {
+                const row = headers.map(header => {
+                    const value = obj[header];
+                    // Ensure values are strings for table output
+                    return value !== undefined && value !== null ? String(value) : '';
+                }).join(' | ');
+                table += `${indentStr}| ${row} |\n`;
+            });
+            return table + '\n';
+        }
+        // === END: NEW GENERIC JSON TO MARKDOWN LOGIC ===
 
         async function sendMessage() {
             const message = userInput.value.trim();
@@ -615,15 +694,23 @@
                     let parsedReply = data.reply;
 
                     if (typeof parsedReply === 'string' && parsedReply.startsWith("{") && parsedReply.endsWith("}")) {
-                        botReplyContent = '```json\n' + parsedReply + '\n```\n';
+                        // If it's a JSON string, try to parse and then convert to Markdown
+                        try {
+                            const innerJson = JSON.parse(parsedReply);
+                            botReplyContent = jsonToMarkdown(innerJson); // Use generic JSON to Markdown
+                        } catch (e) {
+                            // If it's just a string that looks like JSON but isn't valid, treat as code block
+                            botReplyContent = '```json\n' + parsedReply + '\n```\n';
+                        }
                     } else if (parsedReply && typeof parsedReply === 'object' && parsedReply.type === 'tool_calls' && Array.isArray(parsedReply.results)) {
+                        // Existing tool calls handling
                         agentName = parsedReply.agent || agentName;
                         botReplyContent = parsedReply.results.map(r => toolCallToMarkdown(r)).join('\n\n');
                     } else if (parsedReply && typeof parsedReply === 'object' && parsedReply.type === 'chat' && parsedReply.response) {
+                         // Existing chat type handling
                          agentName = parsedReply.agent || agentName;
                          let chatResponseText = parsedReply.response;
                          // Heuristic: If the entire chat response is wrapped in ** markdown, unwrap it.
-                         // This part remains, as it's a good safeguard if the backend *does* accidentally send this.
                          if (typeof chatResponseText === 'string' && chatResponseText.startsWith('**') && chatResponseText.endsWith('**')) {
                              let unwrapped = chatResponseText.substring(2, chatResponseText.length - 2).trim();
                              if (!unwrapped.includes('**') && !unwrapped.includes('__') && !unwrapped.includes('*') && !unwrapped.includes('_')) {
@@ -635,11 +722,22 @@
                              botReplyContent = chatResponseText;
                          }
                     }
+                    else if (typeof parsedReply === 'object' && parsedReply !== null) {
+                        // >>> NEW: Handle any other generic JSON object using the new jsonToMarkdown function <<<
+                        botReplyContent = jsonToMarkdown(parsedReply);
+                    }
                     else {
+                        // Fallback for primitive types or unexpected structures in data.reply
                         botReplyContent = typeof parsedReply === 'string' ? parsedReply : JSON.stringify(parsedReply, null, 2);
                     }
                 } else {
-                    botReplyContent = JSON.stringify(data, null, 2);
+                    // If 'data.reply' doesn't exist, try to render the whole 'data' object as Markdown
+                    if (typeof data === 'object' && data !== null) {
+                         botReplyContent = jsonToMarkdown(data);
+                    } else {
+                         // Fallback if data itself is not an object
+                        botReplyContent = JSON.stringify(data, null, 2);
+                    }
                 }
                 
                 // If botReplyContent is empty after processing, provide a default message
