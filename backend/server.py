@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Body
-from fastapi_mcp import FastApiMCP
 from datetime import datetime, timedelta
 from typing import Optional
 from pydantic import BaseModel
@@ -175,14 +174,25 @@ async def incidencias_por_nombre(nombre: str = Body(..., embed=True)):
 
 @app.post("/actualizar_estado_incidencia", operation_id="actualizar_estado_incidencia")
 async def actualizar_estado_incidencia(
-    incidencia_id: int = Body(..., embed=True),
+    dni: str = Body(..., embed=True),
+    ubicacion: str = Body(..., embed=True),
     nuevo_estado: str = Body(..., embed=True)
 ):
-    # Actualizar el estado de la incidencia
-    result = run_query("SELECT 1 FROM incidencias WHERE id = ?", (incidencia_id,))
+    # Buscar el usuario_id usando el DNI
+    result = run_query("SELECT id FROM abonados WHERE dni = ?", (dni,))
     if not result:
-        return {"error": "No se encontró una incidencia con el ID proporcionado."}
-
+        return {"error": "No se encontró un abonado con el DNI proporcionado."}
+    usuario_id = result[0][0]
+    # Capitalizar la ubicación para evitar problemas de mayúsculas/minúsculas
+    ubicacion = ubicacion.strip().capitalize()
+    # Buscar la incidencia por usuario y ubicación
+    incidencia = run_query(
+        "SELECT id FROM incidencias WHERE usuario_id = ? AND ubicacion = ? ORDER BY id DESC LIMIT 1",
+        (usuario_id, ubicacion)
+    )
+    if not incidencia:
+        return {"error": "No se encontró ninguna incidencia para el abonado en esa ubicación."}
+    incidencia_id = incidencia[0][0]
     run_query(
         "UPDATE incidencias SET estado = ? WHERE id = ?",
         (nuevo_estado, incidencia_id),
@@ -206,6 +216,10 @@ async def incidencias_por_ubicacion(ubicacion: str = Body(..., embed=True)):
     )
     return {"incidencias": [{"ubicacion": r[0], "descripcion": r[1], "estado": r[2]} for r in result]}
 
+@app.post("/weather_foo", operation_id="weather_foo")
+async def weather_foo(direccion: str = Body(..., embed=True)):
+    return {"weather": f"35 grados despejado en {direccion}"}
+
 @app.get("/herramientas_disponibles", operation_id="herramientas_disponibles")
 async def herramientas_disponibles():
     return [
@@ -222,5 +236,6 @@ async def herramientas_disponibles():
         {"endpoint": "/incidencias_por_nombre", "descripcion": "Consulta las incidencias registradas por nombre de usuario."},
         {"endpoint": "/incidencias_por_ubicacion", "descripcion": "Consulta todas las incidencias registradas en una ubicación específica."},
         {"endpoint": "/actualizar_estado_incidencia", "descripcion": "Actualiza el estado de una incidencia por ID."},
-        {"endpoint": "/incidencias_pendientes", "descripcion": "Muestra todas las incidencias pendientes."}
+        {"endpoint": "/incidencias_pendientes", "descripcion": "Muestra todas las incidencias pendientes."},
+        {"endpoint": "/weather_foo", "descripcion": "Devuelve un clima simulado para una dirección."}
     ]

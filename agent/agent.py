@@ -2,8 +2,8 @@ import logging
 import os
 import json
 import requests
-from config.config import GROQ_API_KEY, GROQ_MODEL, SERVER_URL
-from backend.entidades import extract_entities
+from config.config import GROQ_API_KEY, GROQ_MODEL, ROUTING_MODEL, SERVER_URL
+from agent.entidades import extract_entities
 from agent.context_manager import ContextManager
 from agent.agents.agent_base import AgentBase
 
@@ -15,10 +15,6 @@ logging.basicConfig(filename=log_path, level=logging.DEBUG)
 
 from groq import Groq
 client = Groq(api_key=GROQ_API_KEY)
-
-ROUTING_MODEL = "llama-3.3-70b-versatile"
-GENERAL_MODEL = "llama-3.3-70b-versatile"
-
 
 # Cargar tools desde archivo local
 with open("agent/tools_schema.json", "r", encoding="utf-8") as f:
@@ -70,12 +66,12 @@ def responder(user_input: str) -> dict:
     resp = client.chat.completions.create(
         model=ROUTING_MODEL,
         messages=[
-            {"role": "system", "content": router_agent.system_prompt},
+            {"role": "system", "content": router_agent.system_prompt}, # type: ignore
             {"role": "user", "content": router_prompt}
         ],
         max_completion_tokens=10
     )
-    agent_name = resp.choices[0].message.content.strip()
+    agent_name = resp.choices[0].message.content.strip() # type: ignore
     logging.debug(f"[router_agent] Seleccionado: {agent_name}")
     # Si el router_agent responde con un agente válido, delegar
     if agent_name in [a.name for a in user_agents]:
@@ -95,7 +91,7 @@ def responder(user_input: str) -> dict:
     # Si no, usar el modelo generalista
     else:
         resp = client.chat.completions.create(
-            model=GENERAL_MODEL,
+            model=GROQ_MODEL,
             messages=[
                 {"role": "system", "content": "Eres un asistente general útil."},
                 {"role": "user", "content": user_input}

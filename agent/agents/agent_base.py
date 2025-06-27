@@ -47,7 +47,7 @@ class AgentBase:
         # Procesar tool_calls si existen
         if getattr(msg, "tool_calls", None):
             resultados = []
-            for call in msg.tool_calls:
+            for call in msg.tool_calls: # type: ignore
                 name = call.function.name
                 try:
                     args = json.loads(call.function.arguments)
@@ -73,4 +73,12 @@ class AgentBase:
                 resultados.append({"tool": name, "params": args, "response": out})
             return {"type": "tool_calls", "agent": self.name, "results": resultados}
         # Si no hay tool_calls, respuesta normal
+        # Si la respuesta es un JSON válido, devuélvelo como dict
+        if msg.content is not None:
+            try:
+                parsed = json.loads(msg.content)
+                if isinstance(parsed, dict):
+                    return parsed
+            except Exception:
+                pass
         return {"type": "chat", "agent": self.name, "response": msg.content}

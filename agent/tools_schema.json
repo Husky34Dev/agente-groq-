@@ -175,14 +175,15 @@
     "type": "function",
     "function": {
       "name": "actualizar_estado_incidencia",
-      "description": "Actualiza el estado de una incidencia por ID.",
+      "description": "Actualiza el estado de la incidencia de un abonado por DNI y ubicación.",
       "parameters": {
         "type": "object",
         "properties": {
-          "incidencia_id": {"type": "integer", "description": "ID de la incidencia"},
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"},
+          "ubicacion": {"type": "string", "description": "Ubicación de la incidencia (ejemplo: 'Albacete')"},
           "nuevo_estado": {"type": "string", "description": "Nuevo estado de la incidencia"}
         },
-        "required": ["incidencia_id", "nuevo_estado"]
+        "required": ["dni", "ubicacion", "nuevo_estado"]
       }
     }
   },
@@ -195,6 +196,20 @@
         "type": "object",
         "properties": {},
         "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "weather_foo",
+      "description": "Devuelve el clima simulado para una dirección dada. Siempre responde 'weather: 35 grados despejado'.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "direccion": {"type": "string", "description": "Dirección para consultar el clima"}
+        },
+        "required": ["direccion"]
       }
     }
   }
