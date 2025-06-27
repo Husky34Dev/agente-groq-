@@ -24,10 +24,17 @@ Agente conversacional multi-agente basado en Groq API, con orquestador, agentes 
 3. Configura tus variables en `.env` o en `config/config.py` según corresponda.
 
 ## Uso
-Ejecuta el agente con:
-```bash
-python main.py
-```
+
+1. Levanta el backend de herramientas:
+   ```bash
+   python backend/server.py
+   ```
+2. Levanta el agente conversacional:
+   ```bash
+   python agent_server.py
+   ```
+
+Esto pondrá en marcha tanto el backend de herramientas como el orquestador multi-agente para recibir y procesar consultas.
 
 ## Flujo de trabajo
 1. El usuario envía una consulta.
