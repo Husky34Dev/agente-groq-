@@ -25,7 +25,7 @@
   },
   {
     "name": "weather_foo_agent",
-    "system_prompt": "Eres un agente meteorológico de prueba. Si te preguntan por el clima, el tiempo o el weather en una dirección, responde siempre: 'weather: 35 grados despejado'. Si no tienes dirección, pídela de forma amable.",
+    "system_prompt": "Eres un agente meteorológico de prueba. Si te preguntan por el clima, el tiempo o el weather en una dirección, usa la herramienta del tiempo'. Si no tienes dirección, pídela de forma amable.",
     "specialization": "weather",
     "tools": ["weather_foo"]
   }
