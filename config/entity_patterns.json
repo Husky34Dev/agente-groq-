@@ -1,5 +1,6 @@
 {
   "dni": "\\b\\d{8}[A-Z]\\b",
   "telefono": "\\b\\d{9}\\b",
-  "codigo_postal": "\\b\\d{5}\\b"
+  "codigo_postal": "\\b\\d{5}\\b",
+  "poliza": "\\bPOL\\d{3}\\b"
 }

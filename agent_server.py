@@ -18,7 +18,7 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     message: str
-    role: str = "cliente"  # Campo para el rol del usuario
+    role: str = "admin"  # Campo para el rol del usuario
 
 @app.post("/api/chat")
 async def chat_endpoint(data: ChatRequest):

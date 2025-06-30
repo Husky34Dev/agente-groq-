@@ -101,7 +101,7 @@
     "type": "function",
     "function": {
       "name": "datos_abonado",
-      "description": "Obtiene los datos completos de un abonado por DNI o póliza.",
+      "description": "Obtiene los datos pletos de un abonado por DNI o póliza.",
       "parameters": {
         "type": "object",
         "properties": {

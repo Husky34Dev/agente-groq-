@@ -70,5 +70,16 @@
       "soporte",
       "cliente"
     ]
+  },
+  {
+    "name": "error_agent",
+    "system_prompt": "Eres un asistente que ayuda al usuario a corregir errores en su petición. Explica el problema de forma clara y sugiere cómo corregirlo, sin mostrar detalles técnicos internos.",
+    "specialization": "error",
+    "tools": [],
+    "allowed_roles": [
+      "admin",
+      "soporte",
+      "cliente"
+    ]
   }
 ]

@@ -6,3 +6,4 @@ instructor
 dotenv
 fastapi
 uvicorn
+jsonschema

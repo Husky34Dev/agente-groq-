@@ -91,7 +91,10 @@ class Orchestrator:
         )
         agent_name = resp.choices[0].message.content.strip() # type: ignore
         logging.debug(f"[router_agent] Seleccionado: {agent_name}")
-        if agent_name in [a.name for a in allowed_agents]:
+        agent_name_normalized = agent_name.strip().lower()
+        allowed_names_normalized = [a.name.strip().lower() for a in allowed_agents]
+        logging.debug(f"[responder] Nombres de agentes permitidos: {allowed_names_normalized}")
+        if agent_name_normalized in allowed_names_normalized:
             entidades = self.context_manager.extract_and_update(user_input)
             for entidad in self.context_manager.patterns.keys():
                 if entidad not in entidades:
@@ -100,12 +103,17 @@ class Orchestrator:
                         entidades[entidad] = referencia[entidad]
             logging.debug(f"Entidades extraídas: {entidades}")
             try:
-                respuesta = self.route(user_input, entidades, agent_name=agent_name, allowed_agents=allowed_agents)
+                # Buscar el agente real usando el nombre normalizado
+                idx = allowed_names_normalized.index(agent_name_normalized)
+                agente_obj = allowed_agents[idx]
+                respuesta = self.route(user_input, entidades, agent_name=agente_obj.name, allowed_agents=allowed_agents)
+                logging.debug(f"[responder] Respuesta del agente '{agente_obj.name}': {respuesta}")
             except Exception as e:
                 logging.exception("Error en la coordinación de agentes")
                 return {"type": "error", "error": str(e)}
             return respuesta
         else:
+            logging.debug(f"[responder] No se encontró agente válido para '{agent_name}', usando asistente general.")
             resp = self.client.chat.completions.create(
                 model=GROQ_MODEL,
                 messages=[

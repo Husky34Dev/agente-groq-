@@ -482,7 +482,11 @@
 
         // Centralized function to convert tool call results to Markdown
         function toolCallToMarkdown(toolResult) {
-            const { tool, response } = toolResult;
+            const { tool, response, error } = toolResult;
+            // Mostrar mensaje de error amigable si existe
+            if (error && typeof error === 'string') {
+                return `❌ ${error}`;
+            }
             if (!tool || !response) return '';
 
             // Handle direct messages from tool responses
