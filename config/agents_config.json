@@ -3,30 +3,72 @@
     "name": "router_agent",
     "system_prompt": "Eres un agente de enrutamiento. Dada una consulta de usuario, responde SOLO con el nombre del agente más adecuado para manejarla: factura_agent, incidencia_agent, datos_agent o weather_foo_agent. No expliques tu decisión. Ejemplos:\nUsuario: ¿Cuáles son las facturas pendientes del DNI 87654321B?\nRespuesta: factura_agent\nUsuario: ¿Qué incidencias tiene el usuario Juan Pérez?\nRespuesta: incidencia_agent\nUsuario: Dame los datos del abonado 12345678A\nRespuesta: datos_agent\nUsuario: ¿Cómo puedo pagar mi factura?\nRespuesta: factura_agent\nUsuario: ¿Dónde está la oficina?\nRespuesta: datos_agent\nUsuario: ¿Existe el abonado 87654321B?\nRespuesta: datos_agent\nUsuario: ¿Cuál es la deuda total del abonado 87654321B?\nRespuesta: factura_agent\nUsuario: ¿Qué incidencias hay en la calle Mayor?\nRespuesta: incidencia_agent\nUsuario: Actualiza el estado de la incidencia 123\nRespuesta: incidencia_agent\nUsuario: ¿Cuál es la dirección del abonado 87654321B?\nRespuesta: datos_agent\nUsuario: ¿Cuándo fue el último pago del abonado 87654321B?\nRespuesta: factura_agent\nUsuario: ¿Qué tiempo hace en Madrid?\nRespuesta: weather_foo_agent\nUsuario: ¿Puedes decirme el clima en Barcelona?\nRespuesta: weather_foo_agent\nUsuario: ¿Cuál es el weather en Sevilla?\nRespuesta: weather_foo_agent\nUsuario: ¿Me puedes decir el tiempo en Valencia?\nRespuesta: weather_foo_agent\n",
     "specialization": "router",
-    "tools": []
+    "tools": [],
+    "allowed_roles": [
+      "admin",
+      "soporte",
+      "cliente"
+    ]
   },
   {
     "name": "factura_agent",
     "system_prompt": "Eres un experto en facturación. Solo responde sobre facturas y pagos. Nunca menciones el nombre de funciones, herramientas o procesos internos. Si necesitas más información, pídela de forma natural y amable, sin detalles técnicos.",
     "specialization": "factura",
-    "tools": ["todas_las_facturas", "facturas_pendientes", "deuda_total", "ultimo_pago"]
+    "tools": [
+      "todas_las_facturas",
+      "facturas_pendientes",
+      "deuda_total",
+      "ultimo_pago"
+    ],
+    "allowed_roles": [
+      "admin",
+      "soporte"
+    ]
   },
   {
     "name": "incidencia_agent",
     "system_prompt": "Eres un gestor de incidencias. Solo responde sobre incidencias y problemas técnicos. Nunca menciones el nombre de funciones, herramientas o procesos internos. Si necesitas más información, pídela de forma natural y amable, sin detalles técnicos.",
     "specialization": "incidencia",
-    "tools": ["crear_incidencia", "incidencias_por_dni", "incidencias_por_nombre", "incidencias_por_ubicacion", "incidencias_pendientes", "actualizar_estado_incidencia"]
+    "tools": [
+      "crear_incidencia",
+      "incidencias_por_dni",
+      "incidencias_por_nombre",
+      "incidencias_por_ubicacion",
+      "incidencias_pendientes",
+      "actualizar_estado_incidencia"
+    ],
+    "allowed_roles": [
+      "admin",
+      "soporte",
+      "cliente"
+    ]
   },
   {
     "name": "datos_agent",
     "system_prompt": "Eres un asistente de datos personales. Solo responde sobre datos de abonados, direcciones y teléfonos. Nunca menciones el nombre de funciones, herramientas o procesos internos. Si necesitas más información, pídela de forma natural y amable, sin detalles técnicos.",
     "specialization": "datos",
-    "tools": ["datos_abonado", "direccion_abonado", "existe_abonado"]
+    "tools": [
+      "datos_abonado",
+      "direccion_abonado",
+      "existe_abonado"
+    ],
+    "allowed_roles": [
+      "admin",
+      "soporte",
+      "cliente"
+    ]
   },
   {
     "name": "weather_foo_agent",
     "system_prompt": "Eres un agente meteorológico de prueba. Si te preguntan por el clima, el tiempo o el weather en una dirección, usa la herramienta del tiempo'. Si no tienes dirección, pídela de forma amable.",
     "specialization": "weather",
-    "tools": ["weather_foo"]
+    "tools": [
+      "weather_foo"
+    ],
+    "allowed_roles": [
+      "admin",
+      "soporte",
+      "cliente"
+    ]
   }
 ]

@@ -23,11 +23,22 @@ reference_map_path = os.path.join(os.path.dirname(__file__), "..", "config", "re
 context_manager = ContextManager(patterns_path, reference_map_path)
 
 # Cargar agentes dinámicamente desde config/agents_config.json
-agents_config_path = os.path.join(os.path.dirname(__file__), "..", "config", "agents_config.json")
 def load_agents_from_config(config_path):
+    """
+    Carga la configuración de agentes desde un archivo JSON y crea instancias de AgentBase.
+    
+    Args:
+        config_path (str): Ruta al archivo de configuración de agentes.
+    
+    Returns:
+        list: Lista de instancias de AgentBase.
+    """
     with open(config_path, 'r', encoding='utf-8') as f:
         configs = json.load(f)
+    # No añadir allowed_roles por defecto, solo usar lo que venga en el JSON
     return [AgentBase(**cfg) for cfg in configs]
+
+agents_config_path = os.path.join(os.path.dirname(__file__), "..", "config", "agents_config.json")
 agents = load_agents_from_config(agents_config_path)
 
 # Identificar router_agent y agentes normales
@@ -37,5 +48,16 @@ user_agents = [a for a in agents if a.name != "router_agent"]
 # Crear el orquestador
 orchestrator = Orchestrator(user_agents, router_agent, tools, context_manager)
 
-def responder(user_input: str) -> dict:
-    return orchestrator.responder(user_input)
+def responder(user_input: str, user_role: str = "cliente") -> dict:
+    """
+    Función principal de entrada para procesar la petición del usuario.
+    Llama al orquestador para obtener la respuesta adecuada según el rol y la entrada.
+    
+    Args:
+        user_input (str): Entrada del usuario.
+        user_role (str, opcional): Rol del usuario. Por defecto es 'cliente'.
+    
+    Returns:
+        dict: Respuesta generada por el orquestador.
+    """
+    return orchestrator.responder(user_input, user_role=user_role)

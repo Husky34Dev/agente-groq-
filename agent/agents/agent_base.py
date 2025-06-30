@@ -5,19 +5,41 @@ from groq import Groq
 from config.config import GROQ_API_KEY, GROQ_MODEL, SERVER_URL
 
 class AgentBase:
-    def __init__(self, name, system_prompt, specialization, tools):
+    """
+    Clase base para los agentes conversacionales.
+    Define la estructura y el comportamiento general de un agente,
+    incluyendo el manejo de mensajes, herramientas y roles permitidos.
+    """
+    def __init__(self, name, system_prompt, specialization, tools, allowed_roles=None):
+        """
+        Inicializa un agente base con sus propiedades principales.
+        
+        Args:
+            name (str): Nombre del agente.
+            system_prompt (str): Prompt de sistema especializado para el agente.
+            specialization (str): Especialización o dominio del agente.
+            tools (list): Lista de herramientas que puede usar el agente.
+            allowed_roles (list, opcional): Roles permitidos para este agente.
+        """
         self.name = name
         self.system_prompt = system_prompt
         self.specialization = specialization
         self.tools = tools
+        self.allowed_roles = allowed_roles if allowed_roles is not None else ["cliente", "admin", "soporte"]
         self.client = Groq(api_key=GROQ_API_KEY)
 
     def handle(self, user_input, entidades, context, tools_schema=None):
         """
-        user_input: str
-        entidades: dict (entidades extraídas y resueltas)
-        context: dict (contexto compartido entre agentes)
-        tools_schema: lista de tools (opcional, si no se pasa, usa self.tools)
+        Procesa la entrada del usuario y genera una respuesta usando el modelo y las herramientas disponibles.
+        
+        Args:
+            user_input (str): Entrada del usuario.
+            entidades (dict): Entidades extraídas y resueltas.
+            context (dict): Contexto compartido entre agentes.
+            tools_schema (list, opcional): Lista de herramientas disponibles (puede ser None).
+        
+        Returns:
+            dict: Respuesta generada por el modelo, incluyendo posibles llamadas a herramientas.
         """
         messages = []
         # Añadir el system prompt especializado

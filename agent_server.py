@@ -18,11 +18,12 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     message: str
+    role: str = "cliente"  # Campo para el rol del usuario
 
 @app.post("/api/chat")
 async def chat_endpoint(data: ChatRequest):
     try:
-        result = responder(data.message)
+        result = responder(data.message, user_role=data.role)  # Pasar el rol al responder
         # El resultado puede ser dict o string, normalizamos la respuesta
         if isinstance(result, dict):
             # Si es un dict, serializar como JSON válido para el frontend
