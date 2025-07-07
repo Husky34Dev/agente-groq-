@@ -1,9 +1,9 @@
 import logging
 import json
 from groq import Groq
-from config.config import GROQ_API_KEY, GROQ_MODEL, ROUTING_MODEL, SERVER_URL
-from agent.agents.agent_base import AgentBase
-from agent.tools.context_manager import ContextManager
+from core.config.config import GROQ_API_KEY, GROQ_MODEL, ROUTING_MODEL, SERVER_URL
+from core.agent.agents.agent_base import AgentBase
+from core.agent.tools.context_manager import ContextManager
 
 class Orchestrator:
     """
@@ -82,7 +82,7 @@ class Orchestrator:
         allowed_agents = self.get_allowed_agents(user_role)
         router_prompt = f"Usuario: {user_input}\nRespuesta:"
         resp = self.client.chat.completions.create(
-            model=ROUTING_MODEL,
+            model=ROUTING_MODEL, # type: ignore
             messages=[
                 {"role": "system", "content": self.router_agent.system_prompt},
                 {"role": "user", "content": router_prompt}
@@ -115,7 +115,7 @@ class Orchestrator:
         else:
             logging.debug(f"[responder] No se encontró agente válido para '{agent_name}', usando asistente general.")
             resp = self.client.chat.completions.create(
-                model=GROQ_MODEL,
+                model=GROQ_MODEL, # type: ignore
                 messages=[
                     {"role": "system", "content": "Eres un chatbot asistente general. Si no puedes ayudar con la petición, responde de forma breve y educada, por ejemplo: 'Lo siento, no tengo acceso a esa información.' o 'No puedo ayudarte con eso.' Da respuestas cortas y claras."},
                     {"role": "user", "content": user_input}

@@ -2,8 +2,8 @@ import json
 import os
 import re
 
-# Cargar patrones de entidades
-with open(os.path.join(os.path.dirname(__file__), "../../config/entity_patterns.json"), encoding="utf-8") as f:
+# Cargar patrones de entidades - AHORA DESDE client_config
+with open("client_config/entity_patterns.json", encoding="utf-8") as f:
     entity_patterns = json.load(f)
 
 def extract_entities(text: str) -> dict:

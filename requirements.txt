@@ -1,9 +1,0 @@
-groq
-requests
-python-dotenv
-pydantic
-instructor
-dotenv
-fastapi
-uvicorn
-jsonschema

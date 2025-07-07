@@ -11,8 +11,10 @@ app = FastAPI()
 DB_PATH = os.path.join(os.path.dirname(__file__), "demo.db")
 
 # Configuración del logger
+log_dir = os.path.join(os.path.dirname(__file__), "..", "..", "logs")
+os.makedirs(log_dir, exist_ok=True)
 logging.basicConfig(
-    filename=os.path.join(os.path.dirname(__file__), "../logs/server.log"),
+    filename=os.path.join(log_dir, "server.log"),
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -107,7 +109,7 @@ async def datos_abonado(data: DatosAbonadoInput):
         )
     else:
         result = run_query(
-            "SELECT nombre, dni, direccion, email, telefono, poliza FROM abonados WHERE poliza = ?",
+            "SELECT nombre, dni, direccion, email, telefono, poliza FROM abonados WHERE dni = ?",
             (poliza,)
         )
 

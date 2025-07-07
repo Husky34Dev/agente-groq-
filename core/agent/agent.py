@@ -1,28 +1,28 @@
 import logging
 import os
 import json
-from config.config import GROQ_API_KEY, GROQ_MODEL, ROUTING_MODEL, SERVER_URL
-from agent.tools.entidades import extract_entities
-from agent.tools.context_manager import ContextManager
-from agent.agents.agent_base import AgentBase
-from agent.orchestrator import Orchestrator
+from core.config.config import GROQ_API_KEY, GROQ_MODEL, ROUTING_MODEL, SERVER_URL
+from core.agent.tools.entidades import extract_entities
+from core.agent.tools.context_manager import ContextManager
+from core.agent.agents.agent_base import AgentBase
+from core.agent.orchestrator import Orchestrator
 
 # Asegurar que la carpeta logs existe
-log_dir = os.path.join(os.path.dirname(__file__), "..", "logs")
+log_dir = os.path.join(os.path.dirname(__file__), "..", "..", "logs")
 os.makedirs(log_dir, exist_ok=True)
 log_path = os.path.join(log_dir, "agent_debug.log")
 logging.basicConfig(filename=log_path, level=logging.DEBUG)
 
-# Cargar tools desde archivo local
-with open("agent/tools_schema.json", "r", encoding="utf-8") as f:
+# Cargar tools desde archivo local - AHORA DESDE client_config
+with open("client_config/tools_schema.json", "r", encoding="utf-8") as f:
     tools = json.load(f)
 
-# Inicializar el ContextManager con los paths de los JSON
-patterns_path = os.path.join(os.path.dirname(__file__), "..", "config", "entity_patterns.json")
-reference_map_path = os.path.join(os.path.dirname(__file__), "..", "config", "reference_map.json")
+# Inicializar el ContextManager con los paths de los JSON - AHORA DESDE client_config
+patterns_path = "client_config/entity_patterns.json"
+reference_map_path = "client_config/reference_map.json"
 context_manager = ContextManager(patterns_path, reference_map_path)
 
-# Cargar agentes dinámicamente desde config/agents_config.json
+# Cargar agentes dinámicamente desde client_config/agents_config.json
 def load_agents_from_config(config_path):
     """
     Carga la configuración de agentes desde un archivo JSON y crea instancias de AgentBase.
@@ -38,7 +38,7 @@ def load_agents_from_config(config_path):
     # No añadir allowed_roles por defecto, solo usar lo que venga en el JSON
     return [AgentBase(**cfg) for cfg in configs]
 
-agents_config_path = os.path.join(os.path.dirname(__file__), "..", "config", "agents_config.json")
+agents_config_path = "client_config/agents_config.json"
 agents = load_agents_from_config(agents_config_path)
 
 # Identificar router_agent y agentes normales
