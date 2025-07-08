@@ -24,4 +24,4 @@ RUN mkdir -p logs
 EXPOSE 8080
 
 # Comando de inicio
-CMD ["sh", "-c", "python -m uvicorn core.backend.server:app -- reload --port 8000 & python web/main.py"]
+CMD ["sh", "-c", "python -m uvicorn core.backend.server:app --reload --port 8000 & python web/main.py"]
