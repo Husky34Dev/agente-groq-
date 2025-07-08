@@ -268,9 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
         facturas.forEach(factura => {
             const facturaDiv = document.createElement('div');
             facturaDiv.className = 'factura-item';
-            
+
             const estadoClass = factura.estado === 'Pagado' ? 'estado-pagado' : 'estado-pendiente';
             facturaDiv.innerHTML = `
+                <div class="factura-id-label"><span>ID:</span> <span class="factura-id-value">${factura.identificador || 'Sin Identificador'}</span></div>
                 <div class="factura-fecha">${factura.fecha || 'Sin fecha'}</div>
                 <div class="factura-estado ${estadoClass}">${factura.estado || 'Sin estado'}</div>
                 <div class="factura-importe">€${factura.importe || '0'}</div>

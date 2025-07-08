@@ -76,6 +76,8 @@ logs/
 
 # Databases
 *.sqlite3
+# Pero incluir la demo database
+!core/backend/demo.db
 
 # System files
 .DS_Store

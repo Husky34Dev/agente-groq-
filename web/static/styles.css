@@ -481,3 +481,29 @@ body {
         border-radius: 50%;
     }
 }
+
+.factura-id-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.2rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.factura-id-label span:first-child {
+    font-size: 0.95em;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.factura-id-value {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: #e6f0ff;
+    border-radius: 6px;
+    padding: 0.1em 0.5em;
+    margin-left: 0.2em;
+}

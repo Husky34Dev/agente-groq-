@@ -212,5 +212,21 @@
         "required": ["direccion"]
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "actualizar_factura",
+      "description": "Actualiza el estado de la factura de un abonado por DNI e Identificador.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado"},
+          "identificador": {"type": "string", "description": "Identificador de la factura a actualizar"},
+          "nuevo_estado": {"type": "string", "description": "Nuevo estado de la factura (ejemplo: 'Pagado' o 'Pendiente')"}
+        },
+        "required": ["dni", "identificador", "nuevo_estado"]
+      }
+    }
   }
 ]

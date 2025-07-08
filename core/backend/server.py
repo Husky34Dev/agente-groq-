@@ -86,10 +86,10 @@ async def facturas_pendientes(dni: str = Body(..., embed=True)):
 @app.post("/todas_las_facturas", operation_id="todas_las_facturas")
 async def todas_las_facturas(dni: str = Body(..., embed=True)):
     result = run_query(
-        "SELECT fecha, estado, importe FROM facturas WHERE dni_abonado = ? ORDER BY fecha DESC",
+        "SELECT id,fecha, estado, importe FROM facturas WHERE dni_abonado = ? ORDER BY fecha DESC",
         (dni,)
     )
-    return {"facturas": [{"fecha": r[0], "estado": r[1], "importe": r[2]} for r in result]}
+    return {"facturas": [{"identificador":r[0],"fecha": r[1], "estado": r[2], "importe": r[3]} for r in result]}
 
 class DatosAbonadoInput(BaseModel):
     dni: Optional[str] = None
@@ -174,6 +174,29 @@ async def incidencias_por_nombre(nombre: str = Body(..., embed=True)):
         (nombre,)
     )
     return {"incidencias": [{"ubicacion": r[0], "descripcion": r[1], "estado": r[2]} for r in result]}
+
+
+
+@app.post("/actualizar_factura", operation_id="actualizar_estado_factura")
+async def actualizar_factura(
+    dni:str = Body(..., embed=True),
+    identificador: int = Body(..., embed=True),
+    nuevo_estado: str = Body(..., embed=True)   
+):
+    # Buscar el usuario_id usando el DNI
+    result = run_query("SELECT id FROM abonados WHERE dni = ?", (dni,))
+    if not result:
+        return {"error": "No se encontró un abonado con el DNI proporcionado."}
+    usuario_id = result[0][0]
+    
+    # Actualizar el estado de la última factura del abonado
+    run_query(
+        "UPDATE facturas SET estado = ? WHERE dni_abonado = ? AND id = ?",
+        (nuevo_estado, dni,identificador),
+        commit=True
+    )
+    return {"¡Atención!": f"Estado de la última factura del abonado {dni} actualizado a '{nuevo_estado}'"}
+
 
 @app.post("/actualizar_estado_incidencia", operation_id="actualizar_estado_incidencia")
 async def actualizar_estado_incidencia(
