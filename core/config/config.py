@@ -37,7 +37,7 @@ class ConfigManager:
     def get_server_config(self) -> Dict[str, Any]:
         """Get server configuration"""
         return {
-            "backend_host": os.getenv("BACKEND_HOST", "127.0.0.1"),
+            "backend_host": os.getenv("BACKEND_HOST", "backend"),
             "backend_port": int(os.getenv("BACKEND_PORT", "8000")),
             "frontend_host": os.getenv("FRONTEND_HOST", "127.0.0.1"),
             "frontend_port": int(os.getenv("FRONTEND_PORT", "3000")),

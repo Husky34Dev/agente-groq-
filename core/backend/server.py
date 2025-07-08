@@ -64,7 +64,8 @@ async def deuda_total(dni: str = Body(..., embed=True)):
         "SELECT SUM(importe) FROM facturas WHERE dni_abonado = ? AND estado != 'Pagado'",
         (dni,)
     )
-    return {"deuda": result[0][0] if result[0][0] else 0}
+    deuda = result[0][0] if result[0][0] else 0
+    return {f"La deuda total del abonado {dni} es ": f"{deuda} €"}
 
 @app.post("/facturas_pendientes", operation_id="facturas_pendientes")
 async def facturas_pendientes(dni: str = Body(..., embed=True)):
@@ -109,7 +110,7 @@ async def datos_abonado(data: DatosAbonadoInput):
         )
     else:
         result = run_query(
-            "SELECT nombre, dni, direccion, email, telefono, poliza FROM abonados WHERE dni = ?",
+            "SELECT nombre, dni, direccion, email, telefono, poliza FROM abonados WHERE poliza = ?",
             (poliza,)
         )
 
@@ -169,7 +170,7 @@ async def incidencias_por_dni(dni: str = Body(..., embed=True)):
 @app.post("/incidencias_por_nombre", operation_id="incidencias_por_nombre")
 async def incidencias_por_nombre(nombre: str = Body(..., embed=True)):
     result = run_query(
-        "SELECT ubicacion, descripcion, estado FROM incidencias WHERE usuario_id IN (SELECT id FROM usuarios WHERE username = ?)",
+        "SELECT ubicacion, descripcion, estado FROM incidencias WHERE usuario_id IN (SELECT id FROM abonados WHERE nombre = ?)",
         (nombre,)
     )
     return {"incidencias": [{"ubicacion": r[0], "descripcion": r[1], "estado": r[2]} for r in result]}
@@ -200,7 +201,7 @@ async def actualizar_estado_incidencia(
         (nuevo_estado, incidencia_id),
         commit=True
     )
-    return {"message": f"Estado de la incidencia {incidencia_id} actualizado a '{nuevo_estado}'"}
+    return {"¡Atención!": f"Estado de la incidencia {incidencia_id} del abonado {dni} actualizado a '{nuevo_estado}'"}
 
 @app.post("/incidencias_pendientes", operation_id="incidencias_pendientes")
 async def incidencias_pendientes():

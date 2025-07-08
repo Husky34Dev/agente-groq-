@@ -63,12 +63,7 @@ Pipfile.lock
 
 # Environments
 .env
-.env.local
-.env.production
-.env.staging
-.env.development
-# Allow template files
-!.env.template
+.env.*
 .venv/
 venv/
 ENV/
@@ -80,7 +75,6 @@ venv.bak/
 logs/
 
 # Databases
-*.db
 *.sqlite3
 
 # System files

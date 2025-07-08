@@ -379,6 +379,12 @@ body {
     gap: 0.75rem;
 }
 
+.chat-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 #message-input {
     flex-grow: 1;
     border: 2px solid var(--border-color);
@@ -394,6 +400,28 @@ body {
     border-color: var(--primary-color);
     background-color: white;
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+}
+
+.clear-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.clear-button:hover {
+    background-color: #5a6268;
+}
+
+.clear-button:active {
+    transform: scale(0.95);
 }
 
 .send-button {

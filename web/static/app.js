@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageForm = document.getElementById('message-form');
     const messageInput = document.getElementById('message-input');
     const userRoleSelect = document.getElementById('user-role');
+    const clearChatButton = document.getElementById('clear-chat');
+
+    // --- Manejador del botón limpiar chat ---
+    clearChatButton.addEventListener('click', () => {
+        if (confirm('¿Estás seguro de que quieres limpiar todo el chat?')) {
+            clearChat();
+        }
+    });
 
     // --- Manejador del envío del formulario ---
     messageForm.addEventListener('submit', event => {
@@ -330,6 +338,17 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function scrollToBottom() {
         chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    /**
+     * Limpia todo el contenido del chat.
+     */
+    function clearChat() {
+        chatWindow.innerHTML = '';
+        // Mostrar mensaje de confirmación
+        setTimeout(() => {
+            displayMessage('🧹 Chat limpiado correctamente', 'bot');
+        }, 100);
     }
 
     // --- Event listeners adicionales ---

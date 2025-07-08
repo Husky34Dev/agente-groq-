@@ -18,14 +18,14 @@
                 <div class="role-selector">
                     <label for="user-role">Rol de Usuario:</label>
                     <select id="user-role">
+                        <option value="admin">Administrador</option>
                         <option value="cliente">Cliente</option>
                         <option value="soporte">Soporte</option>
-                        <option value="admin">Administrador</option>
                     </select>
                 </div>
                 <div class="info-panel">
                     <h3>Información</h3>
-                    <p>Introduce tu consulta en el cuadro de texto principal para iniciar el análisis. Los resultados se mostrarán en el panel de la derecha.</p>
+                    <p>Introduce tu consulta en el cuadro de texto principal para realizar consultas. Los resultados se mostrarán en el panel de la derecha.</p>
                 </div>
             </div>
             <div class="sidebar-footer">
@@ -41,13 +41,22 @@
             <footer class="chat-footer">
                 <form id="message-form" class="message-form">
                     <input type="text" id="message-input" placeholder="Escribe tu consulta aquí..." autocomplete="off" required>
-                    <button type="submit" class="send-button">
-                        <span>Enviar</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14"/>
-                            <path d="m12 5 7 7-7 7"/>
-                        </svg>
-                    </button>
+                    <div class="chat-actions">
+                        <button type="button" id="clear-chat" class="clear-button" title="Limpiar chat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18"/>
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                            </svg>
+                        </button>
+                        <button type="submit" class="send-button">
+                            <span>Enviar</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"/>
+                                <path d="m12 5 7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
                 </form>
             </footer>
         </main>
