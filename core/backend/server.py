@@ -244,7 +244,7 @@ async def incidencias_por_ubicacion(ubicacion: str = Body(..., embed=True)):
 
 @app.post("/weather_foo", operation_id="weather_foo")
 async def weather_foo(direccion: str = Body(..., embed=True)):
-    return {"Clima": f"35 grados despejado en {direccion}"}
+    return {"clima": f"35 grados despejado en {direccion}"}
 
 @app.get("/herramientas_disponibles", operation_id="herramientas_disponibles")
 async def herramientas_disponibles():

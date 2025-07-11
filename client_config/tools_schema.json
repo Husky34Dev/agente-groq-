@@ -101,14 +101,23 @@
     "type": "function",
     "function": {
       "name": "datos_abonado",
-      "description": "Obtiene los datos pletos de un abonado por DNI o póliza.",
+      "description": "Obtiene los datos completos de un abonado por DNI o póliza.",
       "parameters": {
         "type": "object",
         "properties": {
-          "dni": {"type": "string", "description": "Documento Nacional de Identidad del abonado (opcional)"},
-          "poliza": {"type": "string", "description": "Número de póliza del abonado (opcional)"}
+          "dni": {
+            "type": "string",
+            "description": "Documento Nacional de Identidad del abonado"
+          },
+          "poliza": {
+            "type": "string",
+            "description": "Número de póliza del abonado"
+          }
         },
-        "required": []
+        "anyOf": [
+          { "required": ["dni"] },
+          { "required": ["poliza"] }
+        ]
       }
     }
   },
